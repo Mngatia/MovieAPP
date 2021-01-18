@@ -34,8 +34,8 @@ public class MainListActivity extends AppCompatActivity {
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                GetRetrofitResponse();
+            public void onClick(View view) {
+                GetRetrofitResponseAccordingToID();
             }
         });
     }
@@ -51,12 +51,12 @@ public class MainListActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
                 if (response.code() == 200){
-                    Log.v("Tag", "The response" +response.body().toString());
+                   // Log.v("Tag", "The response" +response.body().toString());
 
                     List<MovieModel> movies = new ArrayList<>(response.body().getMovies());
 
                     for (MovieModel movie: movies){
-                        Log.v("Tag", "The release date" + movie.getRelease_date());
+                        Log.v("Tag", "Name" + movie.getRelease_date());
                     }
                 }
                 else
@@ -76,5 +76,35 @@ public class MainListActivity extends AppCompatActivity {
             }
         });
 
+    }
+    private void GetRetrofitResponseAccordingToID(){
+        MovieApi movieApi = Services.getMovieApi();
+        Call<MovieModel> responseCall = movieApi
+                .getMovie(
+                        343611,
+                        Credentials.API_KEY);
+
+        responseCall.enqueue(new Callback<MovieModel>() {
+            @Override
+            public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
+
+                if (response.code() == 200){
+                    MovieModel movie = response.body();
+                    Log.v("Tag", "The Response" +movie.getTitle());
+                }
+                else {
+                    try {
+                        Log.v("Tag", "Error" +response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieModel> call, Throwable t) {
+
+            }
+        });
     }
 }
