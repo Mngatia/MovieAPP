@@ -39,6 +39,17 @@ public class MainListActivity extends AppCompatActivity {
         btn = findViewById(R.id.button);
 
         movieListViewModel = new ViewModelProvider(this).get(MovieListViewModel.class);
+
+        //Calling the observer
+        ObserveAnyChange();
+
+        //Testing the method
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchMovieApi("Fast", 1);
+            }
+        });
     }
 
     //Observing any data change
@@ -47,79 +58,91 @@ public class MainListActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<MovieModel> movieModels) {
                 //Observing for any data change
-
-            }
-        });
-    }
-
-
-    private void GetRetrofitResponse(){
-        MovieApi movieApi = Services.getMovieApi();
-        Call<MovieSearchResponse> responseCall = movieApi
-                .searchMovie(
-                        Credentials.API_KEY,
-                        "Jack Reacher",
-                        "1");
-
-        responseCall.enqueue(new Callback<MovieSearchResponse>() {
-            @Override
-            public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
-                if (response.code() == 200){
-                   // Log.v("Tag", "The response" +response.body().toString());
-
-                    List<MovieModel> movies = new ArrayList<>(response.body().getMovies());
-
-                    for (MovieModel movie: movies){
-                        Log.v("Tag", "Name" + movie.getRelease_date());
+                if (movieModels != null){
+                    for (MovieModel movieModel: movieModels){
+                        //Getting the data in log
+                        Log.v("Tag", "onChanged: "+movieModel.getTitle());
                     }
                 }
-                else
-                    {
-                        try {
-                            Log.v("Tag", "Error" + response.errorBody().string());
-                        }catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
-
-            }
-        });
-
-    }
-
-    private void GetRetrofitResponseAccordingToID(){
-        MovieApi movieApi = Services.getMovieApi();
-        Call<MovieModel> responseCall = movieApi
-                .getMovie(
-                        343611,
-                        Credentials.API_KEY);
-
-        responseCall.enqueue(new Callback<MovieModel>() {
-            @Override
-            public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
-
-                if (response.code() == 200){
-                    MovieModel movie = response.body();
-                    Log.v("Tag", "The Response" +movie.getTitle());
-                }
-                else {
-                    try {
-                        Log.v("Tag", "Error" +response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MovieModel> call, Throwable t) {
 
             }
         });
     }
+
+    // 4. Call method in MainActivity
+    private void searchMovieApi(String query, int pageNumber){
+        movieListViewModel.searchMovieApi(query, pageNumber);
+    }
+
+
+
+//    private void GetRetrofitResponse(){
+//        MovieApi movieApi = Services.getMovieApi();
+//        Call<MovieSearchResponse> responseCall = movieApi
+//                .searchMovie(
+//                        Credentials.API_KEY,
+//                        "Jack Reacher",
+//                        "1");
+//
+//        responseCall.enqueue(new Callback<MovieSearchResponse>() {
+//            @Override
+//            public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
+//                if (response.code() == 200){
+//                   // Log.v("Tag", "The response" +response.body().toString());
+//
+//                    List<MovieModel> movies = new ArrayList<>(response.body().getMovies());
+//
+//                    for (MovieModel movie: movies){
+//                        Log.v("Tag", "Name" + movie.getRelease_date());
+//                    }
+//                }
+//                else
+//                    {
+//                        try {
+//                            Log.v("Tag", "Error" + response.errorBody().string());
+//                        }catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
+//
+//            }
+//        });
+//
+//    }
+//
+//    private void GetRetrofitResponseAccordingToID(){
+//        MovieApi movieApi = Services.getMovieApi();
+//        Call<MovieModel> responseCall = movieApi
+//                .getMovie(
+//                        343611,
+//                        Credentials.API_KEY);
+//
+//        responseCall.enqueue(new Callback<MovieModel>() {
+//            @Override
+//            public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
+//
+//                if (response.code() == 200){
+//                    MovieModel movie = response.body();
+//                    Log.v("Tag", "The Response" +movie.getTitle());
+//                }
+//                else {
+//                    try {
+//                        Log.v("Tag", "Error" +response.errorBody().string());
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<MovieModel> call, Throwable t) {
+//
+//            }
+//        });
+//    }
 }

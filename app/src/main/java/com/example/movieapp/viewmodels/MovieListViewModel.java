@@ -14,11 +14,19 @@ public class MovieListViewModel extends ViewModel {
     private MovieRepository movieRepository;
 
     //Constructor
-    public MovieListViewModel() {
+    public MovieListViewModel()
+    {
         movieRepository = MovieRepository.getInstance();
     }
 
-    public LiveData<List<MovieModel>> getMovies(){
+    public LiveData<List<MovieModel>> getMovies()
+    {
         return movieRepository.getMovies();
+    }
+
+    //3. Calling method in ViewModel
+
+    public void searchMovieApi(String query, int pageNumber) {
+        movieRepository.searchMovieApi(query, pageNumber);
     }
 }
