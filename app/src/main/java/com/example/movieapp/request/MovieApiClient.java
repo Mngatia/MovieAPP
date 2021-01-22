@@ -61,7 +61,8 @@ public class MovieApiClient {
                 myHandler.cancel(true);
 
             }
-        }, 5000, TimeUnit.MICROSECONDS);
+        }, 3000, TimeUnit.MILLISECONDS);
+
     }
     //Retrieve data from RestAPI by runnable class
     //we have 2 queries: ID, Search Queries

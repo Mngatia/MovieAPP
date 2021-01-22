@@ -26,6 +26,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainListActivity extends AppCompatActivity {
+    //Before run the app, add the network security config
+
 
     Button btn;
 
@@ -46,8 +48,11 @@ public class MainListActivity extends AppCompatActivity {
         //Testing the method
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                searchMovieApi("Fast", 1);
+            public void onClick(View v) {
+
+                //Displays only the results of page 1
+
+                searchMovieApi("fast", 1);
             }
         });
     }
