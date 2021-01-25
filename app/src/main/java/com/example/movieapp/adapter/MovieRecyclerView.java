@@ -18,6 +18,10 @@ public class MovieRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<MovieModel> mMovies;
     private OnMovieListener onMovieListener;
 
+    public MovieRecyclerView(OnMovieListener onMovieListener) {
+        this.onMovieListener = onMovieListener;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -30,7 +34,7 @@ public class MovieRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int i) {
         ((MovieViewHolder)holder).title.setText(mMovies.get(i).getTitle());
         ((MovieViewHolder)holder).release_date.setText(mMovies.get(i).getRelease_date());
-        ((MovieViewHolder)holder).duration.setText(mMovies.get(i).getRuntime());
+        ((MovieViewHolder)holder).duration.setText("" +mMovies.get(i).getRuntime());
 //Get runtime and category also change the api response.
 
         //Vote average is over 10, and the rating bar is over 5 stars - divide by 2
@@ -38,13 +42,17 @@ public class MovieRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         //ImageView - use Glide Library
         Glide.with(holder.itemView.getContext())
-                .load(mMovies.get(i))
+                .load( "https://image.tmdb.org/t/p/w500/"
+                        +mMovies.get(i).getPoster_path())
                 .into(((MovieViewHolder)holder).imageView);
     }
 
     @Override
-    public int getItemCount() {
-        return mMovies.size();
+    public int getItemCount(){
+        if (mMovies != null)  {
+                return mMovies.size();
+        }
+        return 0;
     }
 
     public void setmMovies(List<MovieModel> mMovies) {
