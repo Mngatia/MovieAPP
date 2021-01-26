@@ -1,6 +1,7 @@
 package com.example.movieapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.movieapp.adapter.MovieRecyclerView;
 import com.example.movieapp.adapter.OnMovieListener;
@@ -43,6 +45,11 @@ public class MainListActivity extends AppCompatActivity implements OnMovieListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         recyclerView = findViewById(R.id.recyclerView);
 
 
@@ -89,6 +96,8 @@ public class MainListActivity extends AppCompatActivity implements OnMovieListen
 
     @Override
     public void onMovieClick(int position) {
+
+        Toast.makeText(this, "The position " +position, Toast.LENGTH_SHORT).show();
 
     }
 
