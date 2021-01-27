@@ -1,5 +1,6 @@
 package com.example.movieapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -7,10 +8,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.movieapp.adapter.MovieRecyclerView;
@@ -50,16 +53,14 @@ public class MainListActivity extends AppCompatActivity implements OnMovieListen
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //SearchView
+        SetupSearchView();
+
         recyclerView = findViewById(R.id.recyclerView);
-
-
         movieListViewModel = new ViewModelProvider(this).get(MovieListViewModel.class);
 
         ConfigureRecyclerView();
         ObserveAnyChange();
-        searchMovieApi("Fast", 1);
-
-
     }
 
     //Observing any data change
@@ -81,23 +82,40 @@ public class MainListActivity extends AppCompatActivity implements OnMovieListen
     }
 
     // 4. Call method in MainActivity
-    private void searchMovieApi(String query, int pageNumber){
-        movieListViewModel.searchMovieApi(query, pageNumber);
-    }
-
-    //5 - Initializing recyclerView and adding data to it
+//    private void searchMovieApi(String query, int pageNumber){
+//        movieListViewModel.searchMovieApi(query, pageNumber);
+//    }
+// 5 - Initializing recyclerView and adding data to it
     private void ConfigureRecyclerView(){
         //Live Data cannot be passed via the constructor
         movieRecyclerViewAdapter = new MovieRecyclerView( this);
 
         recyclerView.setAdapter(movieRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+
+        //RecyclerView pagination. Loading next page of api response
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (!recyclerView.canScrollVertically(1)){
+                    //Display in search results on the next page api
+                    movieListViewModel.searchNextPage();
+                }
+            }
+        });
     }
 
     @Override
     public void onMovieClick(int position) {
 
-        Toast.makeText(this, "The position " +position, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(this, "The position " +position, Toast.LENGTH_SHORT).show();
+        //We need the id of the movie in order to get all its details
+
+        Intent intent = new Intent(this, MovieDetails.class);
+        intent.putExtra("movie", movieRecyclerViewAdapter.getSelectedMovie(position));
+        startActivity(intent);
 
     }
 
@@ -105,77 +123,27 @@ public class MainListActivity extends AppCompatActivity implements OnMovieListen
     public void onCategoryClick(String category) {
 
     }
+
+//Get data from SearchView and query the api to get the results(movies)
+    private void SetupSearchView() {
+        final SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                movieListViewModel.searchMovieApi(
+                        //Search String got from SearchView
+                        query,
+                        1
+                );
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
 }
 
-
-
-//    private void GetRetrofitResponse(){
-//        MovieApi movieApi = Services.getMovieApi();
-//        Call<MovieSearchResponse> responseCall = movieApi
-//                .searchMovie(
-//                        Credentials.API_KEY,
-//                        "Jack Reacher",
-//                        "1");
-//
-//        responseCall.enqueue(new Callback<MovieSearchResponse>() {
-//            @Override
-//            public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
-//                if (response.code() == 200){
-//                   // Log.v("Tag", "The response" +response.body().toString());
-//
-//                    List<MovieModel> movies = new ArrayList<>(response.body().getMovies());
-//
-//                    for (MovieModel movie: movies){
-//                        Log.v("Tag", "Name" + movie.getRelease_date());
-//                    }
-//                }
-//                else
-//                    {
-//                        try {
-//                            Log.v("Tag", "Error" + response.errorBody().string());
-//                        }catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
-//
-//            }
-//        });
-//
-//    }
-//
-//    private void GetRetrofitResponseAccordingToID(){
-//        MovieApi movieApi = Services.getMovieApi();
-//        Call<MovieModel> responseCall = movieApi
-//                .getMovie(
-//                        343611,
-//                        Credentials.API_KEY);
-//
-//        responseCall.enqueue(new Callback<MovieModel>() {
-//            @Override
-//            public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
-//
-//                if (response.code() == 200){
-//                    MovieModel movie = response.body();
-//                    Log.v("Tag", "The Response" +movie.getTitle());
-//                }
-//                else {
-//                    try {
-//                        Log.v("Tag", "Error" +response.errorBody().string());
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<MovieModel> call, Throwable t) {
-//
-//            }
-//        });
-//    }
 

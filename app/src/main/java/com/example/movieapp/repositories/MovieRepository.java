@@ -7,6 +7,9 @@ import com.example.movieapp.models.MovieModel;
 import com.example.movieapp.request.MovieApiClient;
 
 import java.util.List;
+import java.util.Queue;
+
+import retrofit2.http.Query;
 
 public class MovieRepository {
     //Class - acts as repository
@@ -14,7 +17,11 @@ public class MovieRepository {
     private static MovieRepository instance;
 
     //LiveData
-    private MovieApiClient movieApiClient;
+    private final MovieApiClient movieApiClient;
+
+    private String mQuery;
+    private int mPageNumber;
+
 
     public static MovieRepository getInstance(){
         if (instance == null){
@@ -35,6 +42,11 @@ public class MovieRepository {
     //2. Calling the method in repository
 
     public void searchMovieApi(String query, int pageNumber) {
+        mQuery = query;
+        mPageNumber = pageNumber;
         movieApiClient.searchMoviesApi(query, pageNumber);
+    }
+    public void searchNextPage(){
+        searchMovieApi(mQuery, mPageNumber+1);
     }
 }
