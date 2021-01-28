@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.movieapp.models.MovieModel;
 
 public class MovieDetails extends AppCompatActivity {
@@ -33,7 +34,15 @@ public class MovieDetails extends AppCompatActivity {
     private void GetDataFromIntent() {
         if (getIntent().hasExtra("movie")){
             MovieModel movieModel = getIntent().getParcelableExtra("movie");
-            Log.v("Tagn", "Incoming intent " +movieModel.getMovie_id());
+          //  Log.v("Tagn", "Incoming intent " +movieModel.getMovie_id());
+            titleDetails.setText(movieModel.getTitle());
+            descDetails.setText(movieModel.getMovie_overview());
+            ratingBarDetails.setRating((movieModel.getVote_average())/2);
+
+            Glide.with(this)
+                    .load("https://image.tmdb.org/t/p/w500/"
+                    +movieModel.getPoster_path())
+                    .into(imageViewDetails);
         }
     }
 }
