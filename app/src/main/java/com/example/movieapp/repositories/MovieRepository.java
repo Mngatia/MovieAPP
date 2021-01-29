@@ -39,6 +39,11 @@ public class MovieRepository {
         return movieApiClient.getMovies();
     }
 
+    public LiveData<List<MovieModel>> getPopular()
+    {
+        return movieApiClient.getMoviesPopular();
+    }
+
     //2. Calling the method in repository
 
     public void searchMovieApi(String query, int pageNumber) {
@@ -46,6 +51,12 @@ public class MovieRepository {
         mPageNumber = pageNumber;
         movieApiClient.searchMoviesApi(query, pageNumber);
     }
+
+    public void searchMoviePopular(int pageNumber) {
+        mPageNumber = pageNumber;
+        movieApiClient.searchMoviesPopular(pageNumber);
+    }
+
     public void searchNextPage(){
         searchMovieApi(mQuery, mPageNumber+1);
     }

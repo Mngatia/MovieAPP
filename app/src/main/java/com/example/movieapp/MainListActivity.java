@@ -44,6 +44,8 @@ public class MainListActivity extends AppCompatActivity implements OnMovieListen
     //ViewModel
     private MovieListViewModel movieListViewModel;
 
+    boolean isPopulary = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,28 @@ public class MainListActivity extends AppCompatActivity implements OnMovieListen
 
         ConfigureRecyclerView();
         ObserveAnyChange();
+        ObservePopularyMovies();
+
+        //Get data for popular movies
+        movieListViewModel.searchMoviePopular(1);
+    }
+
+    private void ObservePopularyMovies() {
+        movieListViewModel.getPopular().observe(this, new Observer<List<MovieModel>>() {
+            @Override
+            public void onChanged(List<MovieModel> movieModels) {
+                //Observing for any data change
+                if (movieModels != null){
+                    for (MovieModel movieModel: movieModels){
+                        //Getting the data in log
+                        Log.v("Tag", "onChanged: "+movieModel.getTitle());
+                        movieRecyclerViewAdapter.setmMovies(movieModels);
+                    }
+                }
+
+            }
+        });
+
     }
 
     //Observing any data change
@@ -91,7 +115,7 @@ public class MainListActivity extends AppCompatActivity implements OnMovieListen
         movieRecyclerViewAdapter = new MovieRecyclerView( this);
 
         recyclerView.setAdapter(movieRecyclerViewAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
 
 
@@ -141,6 +165,13 @@ public class MainListActivity extends AppCompatActivity implements OnMovieListen
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPopulary = false;
             }
         });
     }

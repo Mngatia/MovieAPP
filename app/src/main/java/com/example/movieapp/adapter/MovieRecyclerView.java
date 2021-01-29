@@ -34,7 +34,7 @@ public class MovieRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int i) {
         ((MovieViewHolder)holder).title.setText(mMovies.get(i).getTitle());
         ((MovieViewHolder)holder).release_date.setText(mMovies.get(i).getRelease_date());
-        ((MovieViewHolder)holder).duration.setText("" +mMovies.get(i).getRuntime());
+        ((MovieViewHolder)holder).duration.setText("" +mMovies.get(i).getOriginal_language());
 //Get runtime and category also change the api response.
 
         //Vote average is over 10, and the rating bar is over 5 stars - divide by 2
