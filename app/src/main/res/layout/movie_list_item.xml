@@ -16,6 +16,7 @@
         app:layout_constrainBottom_toBottomOf="parent"
         app:layout_constrainEnd_toEndOf="parent"
         app:layout_constrainTop_toTopOf="parent"
+        app:layout_constrainStart_toStartOf="parent"
         app:cardCornerRadius="35dp">
 
         <ImageView
