@@ -17,7 +17,7 @@
         android:layout_marginRight="16dp"
         android:fontFamily="serif"
         android:text="Search a movie for today"
-        android:textSize="48sp"/>
+        android:textSize="36sp"/>
 
    <androidx.appcompat.widget.Toolbar
        android:layout_width="match_parent"

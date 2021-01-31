@@ -7,17 +7,17 @@
     android:layout_margin="15dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="275dp"
         android:layout_height="392dp"
-        android:id="@+id/card_view"
         app:cardElevation="10dp"
-        app:layout_constrainBottom_toBottomOf="parent"
-        app:layout_constrainEnd_toEndOf="parent"
-        app:layout_constrainTop_toTopOf="parent"
-        app:layout_constrainStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:cardCornerRadius="35dp">
+
 
         <ImageView
             android:layout_width="match_parent"
